@@ -37,10 +37,23 @@ $GLOBALS['current_page'] = $current_page;
 $property_id = $_GET['id'] ?? 'modele-f4c';
 $selected_property = property_by_id($property_id) ?: $properties[0];
 $property_filter = strtolower(trim((string) ($_GET['filter'] ?? 'all')));
-$visible_properties = array_values(array_filter($properties, static function (array $property) use ($property_filter): bool {
-    return $property_filter === 'all' || strtolower($property['category']) === $property_filter;
+$property_location = strtolower(trim((string) ($_GET['location'] ?? 'all')));
+$property_beds = trim((string) ($_GET['beds'] ?? 'all'));
+$allowed_filters = ['all', 'vente', 'location'];
+$allowed_locations = ['all', 'centre', 'ouagadougou', 'bassinko'];
+$allowed_beds = ['all', '2', '3', '4'];
+$property_filter = in_array($property_filter, $allowed_filters, true) ? $property_filter : 'all';
+$property_location = in_array($property_location, $allowed_locations, true) ? $property_location : 'all';
+$property_beds = in_array($property_beds, $allowed_beds, true) ? $property_beds : 'all';
+$has_property_search = $property_filter !== 'all' || $property_location !== 'all' || $property_beds !== 'all';
+$visible_properties = array_values(array_filter($properties, static function (array $property) use ($property_filter, $property_location, $property_beds): bool {
+    $location = strtolower($property['location']);
+    $matches_filter = $property_filter === 'all' || strtolower($property['category']) === $property_filter;
+    $matches_location = $property_location === 'all' || str_contains($location, $property_location);
+    $matches_beds = $property_beds === 'all' || (int) $property['beds'] === (int) $property_beds;
+    return $matches_filter && $matches_location && $matches_beds;
 }));
-if ($visible_properties === []) {
+if ($visible_properties === [] && !$has_property_search) {
     $visible_properties = $properties;
     $property_filter = 'all';
 }

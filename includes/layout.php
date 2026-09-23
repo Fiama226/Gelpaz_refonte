@@ -12,16 +12,16 @@ function render_header(bool $hero = false): void
             <nav id="main-navigation" class="main-nav" aria-label="Navigation principale">
                 <a class="<?= is_page('home') ? 'is-active' : '' ?>" href="<?= page_url('home') ?>">Accueil</a>
                 <div class="nav-dropdown">
-                    <button type="button">À propos <span>⌄</span></button>
-                    <div class="nav-dropdown__menu">
+                    <button type="button" aria-expanded="false" aria-controls="about-menu">À propos <span aria-hidden="true">⌄</span></button>
+                    <div class="nav-dropdown__menu" id="about-menu">
                         <a href="<?= page_url('about') ?>">Qui sommes-nous ?</a>
                         <a href="<?= page_url('about', ['section' => 'values']) ?>">Missions, visions &amp; valeurs</a>
                         <a href="<?= page_url('team') ?>">Notre équipe</a>
                     </div>
                 </div>
                 <div class="nav-dropdown">
-                    <button type="button">Nos offres <span>⌄</span></button>
-                    <div class="nav-dropdown__menu">
+                    <button type="button" aria-expanded="false" aria-controls="offers-menu">Nos offres <span aria-hidden="true">⌄</span></button>
+                    <div class="nav-dropdown__menu" id="offers-menu">
                         <a href="<?= page_url('properties') ?>">Nos logements</a>
                         <a href="<?= page_url('properties', ['filter' => 'location']) ?>">Nos sites</a>
                         <a href="<?= page_url('pricing') ?>">Souscription logement</a>
@@ -80,11 +80,8 @@ function render_footer(): void
         <div class="container footer-bottom">
             <a class="brand brand--footer" href="<?= page_url('home') ?>"><img src="/assets/images/logo.png" alt="GELPAZ IMMO"></a>
             <p>© <?= date('Y') ?> GELPAZ IMMO. Tous droits réservés.</p>
-            <div class="footer-socials" aria-label="Réseaux sociaux">
-                <a href="#" aria-label="Facebook">f</a>
-                <a href="#" aria-label="Youtube">▶</a>
-                <a href="#" aria-label="LinkedIn">in</a>
-                <a href="#" aria-label="WhatsApp">◔</a>
+            <div class="footer-socials" aria-label="Nous contacter">
+                <a href="https://wa.me/22667308185" target="_blank" rel="noopener noreferrer" aria-label="Contacter GELPAZ IMMO sur WhatsApp">◔</a>
             </div>
         </div>
     </footer>

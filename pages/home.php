@@ -2,7 +2,14 @@
 /** Page view: home */
 ?>
     <main>
-        <section class="home-hero" style="--hero-image: url('<?= img_url($images['hero_alt']) ?>')">
+        <section class="home-hero" aria-label="GELPAZ IMMO, votre partenaire immobilier">
+            <div class="hero-slideshow" aria-live="polite">
+                <?php foreach ($hero_slides as $index => $slide): ?>
+                    <figure class="hero-slide <?= $index === 0 ? 'is-active' : '' ?>" data-slide-index="<?= $index ?>">
+                        <img src="<?= img_url($slide['image']) ?>" alt="<?= e($slide['alt']) ?>" width="525" height="328" <?= $index === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?>>
+                    </figure>
+                <?php endforeach; ?>
+            </div>
             <?php render_header(true); ?>
             <div class="home-hero__shade"></div>
             <div class="container home-hero__content">
@@ -13,12 +20,30 @@
                     <a class="button button--accent" href="<?= page_url('properties') ?>">Découvrir nos logements <span>↗</span></a>
                     <a class="button button--outline-light" href="<?= page_url('contact') ?>">Parler à un conseiller</a>
                 </div>
+                <form class="property-search" action="<?= page_url('properties') ?>" method="get">
+                    <input type="hidden" name="page" value="properties">
+                    <div class="property-search__intro"><span class="property-search__mark" aria-hidden="true">⌕</span><div><strong>Trouvez votre prochain logement</strong><small>Affinez votre recherche en quelques secondes.</small></div></div>
+                    <label>Projet<select name="filter"><option value="all">Acheter ou louer</option><option value="vente">Acheter</option><option value="location">Louer</option></select></label>
+                    <label>Zone<select name="location"><option value="all">Toutes les zones</option><option value="ouagadougou">Ouagadougou</option><option value="centre">Centre</option><option value="bassinko">Bassinko</option></select></label>
+                    <label>Chambres<select name="beds"><option value="all">Toutes</option><option value="2">2 chambres</option><option value="3">3 chambres</option><option value="4">4 chambres</option></select></label>
+                    <button class="button button--accent" type="submit">Voir les biens <span>↗</span></button>
+                </form>
                 <div class="home-hero__proof">
                     <span class="avatar-stack"><i>G</i><i>I</i><i>M</i></span>
                     <span><b>+30 ans</b><small>d’expérience immobilière</small></span>
                     <span class="proof-line"></span>
                     <span><b>100%</b><small>d’écoute &amp; d’engagement</small></span>
                 </div>
+            </div>
+            <div class="hero-controls" aria-label="Contrôles du diaporama">
+                <button class="hero-control hero-control--previous" type="button" aria-label="Image précédente">←</button>
+                <div class="hero-dots">
+                    <?php foreach ($hero_slides as $index => $slide): ?>
+                        <button type="button" aria-label="Afficher l’image <?= $index + 1 ?>" aria-current="<?= $index === 0 ? 'true' : 'false' ?>" data-slide-to="<?= $index ?>"><span></span></button>
+                    <?php endforeach; ?>
+                </div>
+                <button class="hero-control hero-control--next" type="button" aria-label="Image suivante">→</button>
+                <button class="hero-control hero-control--pause" type="button" aria-label="Mettre le diaporama en pause">Ⅱ</button>
             </div>
             <a class="scroll-cue" href="#intro"><span>↓</span> Découvrir</a>
         </section>
@@ -75,7 +100,7 @@
                 <?php render_section_heading('NOTRE SAVOIR-FAIRE', 'Des solutions immobilières <em>complètes.</em>', 'De la recherche à la réalisation, nous sommes à vos côtés.', 'center'); ?>
                 <div class="service-cards">
                     <?php foreach ($services as $service): ?>
-                        <article class="service-card"><span class="service-card__icon"><?= e($service['icon']) ?></span><h3><?= e($service['title']) ?></h3><p><?= e($service['text']) ?></p><a href="<?= page_url('services') ?>" aria-label="En savoir plus sur <?= e($service['title']) ?>">↗</a></article>
+                        <article class="service-card"><span class="service-card__icon" aria-hidden="true"><?= e($service['icon']) ?></span><h3><?= e($service['title']) ?></h3><p><?= e($service['text']) ?></p><a href="<?= page_url('services') ?>" aria-label="En savoir plus sur <?= e($service['title']) ?>">↗</a></article>
                     <?php endforeach; ?>
                 </div>
                 <div class="process-feature">

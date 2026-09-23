@@ -27,6 +27,12 @@ $images = [
     'partner_four' => 'https://gelpaz.com/wp-content/uploads/2025/09/telecharge-3.jpg',
 ];
 
+$hero_slides = [
+    ['image' => $images['hero_alt'], 'alt' => 'Résidence proposée par GELPAZ IMMO'],
+    ['image' => $images['hero'], 'alt' => 'Logement familial proposé par GELPAZ IMMO'],
+    ['image' => $images['villa'], 'alt' => 'Villa proposée par GELPAZ IMMO'],
+];
+
 $properties = [
     [
         'id' => 'modele-f4c',
@@ -154,10 +160,10 @@ $posts = [
 ];
 
 $services = [
-    ['icon' => '⌂', 'title' => 'Vente de propriétés', 'text' => 'Nous vous accompagnons dans l’achat d’un logement de qualité, choisi selon vos besoins et votre budget.'],
-    ['icon' => '↗', 'title' => 'Location', 'text' => 'Trouvez un cadre de vie agréable et bénéficiez de conseils clairs à chaque étape de votre recherche.'],
-    ['icon' => '◈', 'title' => 'Gestion immobilière', 'text' => 'Un accompagnement fiable pour valoriser, administrer et sécuriser votre patrimoine immobilier.'],
-    ['icon' => '⌕', 'title' => 'Conseil & expertise', 'text' => 'Notre expérience du marché burkinabè vous aide à prendre les décisions les plus justes.'],
+    ['icon' => '⌂', 'title' => 'Vente de propriétés', 'text' => 'Trouvez un logement adapté à votre quotidien, à votre projet et à votre budget.'],
+    ['icon' => '↗', 'title' => 'Location', 'text' => 'Identifiez rapidement un cadre de vie agréable avec des informations claires à chaque étape.'],
+    ['icon' => '◈', 'title' => 'Gestion immobilière', 'text' => 'Valorisez, administrez et sécurisez votre patrimoine avec un interlocuteur fiable.'],
+    ['icon' => '⌕', 'title' => 'Conseil & expertise', 'text' => 'Appuyez vos décisions sur notre connaissance du marché immobilier burkinabè.'],
 ];
 
 $testimonials = [
