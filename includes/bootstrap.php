@@ -46,6 +46,7 @@ $property_filter = in_array($property_filter, $allowed_filters, true) ? $propert
 $property_location = in_array($property_location, $allowed_locations, true) ? $property_location : 'all';
 $property_beds = in_array($property_beds, $allowed_beds, true) ? $property_beds : 'all';
 $has_property_search = $property_filter !== 'all' || $property_location !== 'all' || $property_beds !== 'all';
+$property_sort = in_array($_GET['sort'] ?? 'recent', ['recent', 'area'], true) ? $_GET['sort'] : 'recent';
 $visible_properties = array_values(array_filter($properties, static function (array $property) use ($property_filter, $property_location, $property_beds): bool {
     $location = strtolower($property['location']);
     $matches_filter = $property_filter === 'all' || strtolower($property['category']) === $property_filter;
@@ -57,9 +58,10 @@ if ($visible_properties === [] && !$has_property_search) {
     $visible_properties = $properties;
     $property_filter = 'all';
 }
-$contact_success = $current_page === 'contact'
-    && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST'
-    && filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL);
+if ($property_sort === 'area') {
+    usort($visible_properties, static fn (array $a, array $b): int => (int) preg_replace('/\D+/', '', (string) ($a['area'] ?? '0')) <=> (int) preg_replace('/\D+/', '', (string) ($b['area'] ?? '0')));
+}
+$contact_success = false; // No mail delivery integration is configured; never report an unconfirmed submission as received.
 
 function meta_description(string $page): string
 {
