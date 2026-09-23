@@ -1,7 +1,7 @@
 <?php
 /** Page view: home */
 ?>
-    <main>
+    <main id="main">
         <section class="home-hero" aria-label="GELPAZ IMMO, votre partenaire immobilier">
             <div class="hero-slideshow" aria-live="polite">
                 <?php foreach ($hero_slides as $index => $slide): ?>
@@ -17,16 +17,16 @@
                 <h1>La différence,<br><em>c’est notre</em> engagement.</h1>
                 <p class="home-hero__copy">Des solutions immobilières pensées pour vous, un accompagnement qui fait toute la différence.</p>
                 <div class="button-row">
-                    <a class="button button--accent" href="<?= page_url('properties') ?>">Découvrir nos logements <span>↗</span></a>
+                    <a class="button button--accent" href="<?= page_url('properties') ?>">Découvrir nos logements <?= icon('arrow-up-right') ?></a>
                     <a class="button button--outline-light" href="<?= page_url('contact') ?>">Parler à un conseiller</a>
                 </div>
                 <form class="property-search" action="<?= page_url('properties') ?>" method="get">
                     <input type="hidden" name="page" value="properties">
-                    <div class="property-search__intro"><span class="property-search__mark" aria-hidden="true">⌕</span><div><strong>Trouvez votre prochain logement</strong><small>Affinez votre recherche en quelques secondes.</small></div></div>
+                    <div class="property-search__intro"><span class="property-search__mark" aria-hidden="true"><?= icon('search') ?></span><div><strong>Trouvez votre prochain logement</strong><small>Affinez votre recherche en quelques secondes.</small></div></div>
                     <label>Projet<select name="filter"><option value="all">Acheter ou louer</option><option value="vente">Acheter</option><option value="location">Louer</option></select></label>
                     <label>Zone<select name="location"><option value="all">Toutes les zones</option><option value="ouagadougou">Ouagadougou</option><option value="centre">Centre</option><option value="bassinko">Bassinko</option></select></label>
                     <label>Chambres<select name="beds"><option value="all">Toutes</option><option value="2">2 chambres</option><option value="3">3 chambres</option><option value="4">4 chambres</option></select></label>
-                    <button class="button button--accent" type="submit">Voir les biens <span>↗</span></button>
+                    <button class="button button--accent" type="submit">Voir les biens <?= icon('arrow-up-right') ?></button>
                 </form>
                 <div class="home-hero__proof">
                     <span class="avatar-stack"><i>G</i><i>I</i><i>M</i></span>
@@ -36,16 +36,16 @@
                 </div>
             </div>
             <div class="hero-controls" aria-label="Contrôles du diaporama">
-                <button class="hero-control hero-control--previous" type="button" aria-label="Image précédente">←</button>
+                <button class="hero-control hero-control--previous" type="button" aria-label="Image précédente"><?= icon('arrow-left') ?></button>
                 <div class="hero-dots">
                     <?php foreach ($hero_slides as $index => $slide): ?>
                         <button type="button" aria-label="Afficher l’image <?= $index + 1 ?>" aria-current="<?= $index === 0 ? 'true' : 'false' ?>" data-slide-to="<?= $index ?>"><span></span></button>
                     <?php endforeach; ?>
                 </div>
-                <button class="hero-control hero-control--next" type="button" aria-label="Image suivante">→</button>
-                <button class="hero-control hero-control--pause" type="button" aria-label="Mettre le diaporama en pause">Ⅱ</button>
+                <button class="hero-control hero-control--next" type="button" aria-label="Image suivante"><?= icon('arrow-right') ?></button>
+                <button class="hero-control hero-control--pause" type="button" aria-label="Mettre le diaporama en pause"><?= icon('pause') ?></button>
             </div>
-            <a class="scroll-cue" href="#intro"><span>↓</span> Découvrir</a>
+            <a class="scroll-cue" href="#intro"><?= icon('arrow-down') ?> Découvrir</a>
         </section>
 
         <section class="section intro-section" id="intro">
@@ -59,7 +59,7 @@
                     <h2>Créer de la valeur,<br><em>habiter mieux.</em></h2>
                     <p class="lead">Depuis plus de 30 ans, GELPAZ IMMO accompagne les familles et les investisseurs dans la concrétisation de leurs projets immobiliers au Burkina Faso.</p>
                     <p>Nous plaçons l’écoute, la transparence et le professionnalisme au cœur de chaque relation pour vous proposer une expérience simple, sereine et adaptée à vos attentes.</p>
-                    <a class="text-link text-link--dark" href="<?= page_url('about') ?>">Découvrir notre histoire <span>↗</span></a>
+                    <a class="text-link text-link--dark" href="<?= page_url('about') ?>">Découvrir notre histoire <?= icon('arrow-up-right') ?></a>
                     <div class="stats-row">
                         <div><strong>30<sup>+</sup></strong><span>ans d’expérience</span></div>
                         <div><strong>6</strong><span>offres à découvrir</span></div>
@@ -81,7 +81,7 @@
                         <article class="featured-property">
                             <a href="<?= page_url('property', ['id' => $property['id']]) ?>" class="featured-property__image">
                                 <img src="<?= img_url($property['image']) ?>" alt="<?= e($property['title']) ?>" loading="lazy">
-                                <span class="play-dot">↗</span>
+                                <span class="play-dot"><?= icon('arrow-up-right') ?></span>
                             </a>
                             <div class="featured-property__info">
                                 <div><p><?= e($property['location']) ?></p><h3><?= e($property['title']) ?></h3></div>
@@ -91,7 +91,7 @@
                         </article>
                     <?php endforeach; ?>
                 </div>
-                <div class="center-action"><a class="button button--light" href="<?= page_url('properties') ?>">Voir tous nos logements <span>↗</span></a></div>
+                <div class="center-action"><a class="button button--light" href="<?= page_url('properties') ?>">Voir tous nos logements <?= icon('arrow-up-right') ?></a></div>
             </div>
         </section>
 
@@ -100,12 +100,12 @@
                 <?php render_section_heading('NOTRE SAVOIR-FAIRE', 'Des solutions immobilières <em>complètes.</em>', 'De la recherche à la réalisation, nous sommes à vos côtés.', 'center'); ?>
                 <div class="service-cards">
                     <?php foreach ($services as $service): ?>
-                        <article class="service-card"><span class="service-card__icon" aria-hidden="true"><?= e($service['icon']) ?></span><h3><?= e($service['title']) ?></h3><p><?= e($service['text']) ?></p><a href="<?= page_url('services') ?>" aria-label="En savoir plus sur <?= e($service['title']) ?>">↗</a></article>
+                        <article class="service-card"><span class="service-card__icon" aria-hidden="true"><?= icon($service['icon']) ?></span><h3><?= e($service['title']) ?></h3><p><?= e($service['text']) ?></p><a href="<?= page_url('services') ?>" aria-label="En savoir plus sur <?= e($service['title']) ?>"><?= icon('arrow-up-right') ?></a></article>
                     <?php endforeach; ?>
                 </div>
                 <div class="process-feature">
                     <div class="process-feature__image"><img src="<?= img_url($images['villa']) ?>" alt="Une villa Gelpaz Immo" loading="lazy"></div>
-                    <div class="process-feature__content"><p class="eyebrow">SIMPLE, CLAIR, HUMAIN</p><h2>Votre projet,<br><em>notre accompagnement.</em></h2><p>Choisissez votre propriété, échangez avec notre équipe et avancez sereinement vers la réalisation de votre projet.</p><a class="button button--dark" href="<?= page_url('services') ?>">Comment ça marche ? <span>↗</span></a></div>
+                    <div class="process-feature__content"><p class="eyebrow">SIMPLE, CLAIR, HUMAIN</p><h2>Votre projet,<br><em>notre accompagnement.</em></h2><p>Choisissez votre propriété, échangez avec notre équipe et avancez sereinement vers la réalisation de votre projet.</p><a class="button button--dark" href="<?= page_url('services') ?>">Comment ça marche ? <?= icon('arrow-up-right') ?></a></div>
                 </div>
                 <div class="steps-row">
                     <div><span>01</span><h3>Choisir</h3><p>Explorez les biens qui correspondent à votre projet.</p></div>
@@ -122,13 +122,13 @@
                 <div class="team-grid">
                     <?php foreach ($team as $member): ?><article class="team-card"><img src="<?= img_url($member['image']) ?>" alt="<?= e($member['name']) ?>" loading="lazy"><h3><?= e($member['name']) ?></h3><p><?= e($member['role']) ?></p></article><?php endforeach; ?>
                 </div>
-                <div class="center-action"><a class="text-link text-link--dark" href="<?= page_url('about') ?>">Faire connaissance avec GELPAZ <span>↗</span></a></div>
+                <div class="center-action"><a class="text-link text-link--dark" href="<?= page_url('about') ?>">Faire connaissance avec GELPAZ <?= icon('arrow-up-right') ?></a></div>
             </div>
         </section>
 
         <section class="section testimonials-section">
             <div class="container testimonial-layout">
-                <div class="testimonial-copy"><p class="eyebrow">ILS NOUS FONT CONFIANCE</p><h2>Écoutez ceux qui ont choisi <em>Gelpaz.</em></h2><p>Chaque projet est unique. Les histoires de nos clients sont la meilleure preuve de notre engagement.</p><a class="button button--dark" href="<?= page_url('contact') ?>">Parlons de votre projet <span>↗</span></a></div>
+                <div class="testimonial-copy"><p class="eyebrow">ILS NOUS FONT CONFIANCE</p><h2>Écoutez ceux qui ont choisi <em>Gelpaz.</em></h2><p>Chaque projet est unique. Les histoires de nos clients sont la meilleure preuve de notre engagement.</p><a class="button button--dark" href="<?= page_url('contact') ?>">Parlons de votre projet <?= icon('arrow-up-right') ?></a></div>
                 <div class="testimonial-list">
                     <?php foreach ($testimonials as $testimonial): ?><article class="testimonial"><span class="quote-mark">“</span><p><?= e($testimonial['text']) ?></p><div class="testimonial__author"><span><?= e(initials($testimonial['name'])) ?></span><div><strong><?= e($testimonial['name']) ?></strong><small><?= e($testimonial['role']) ?></small></div></div></article><?php endforeach; ?>
                 </div>
@@ -139,13 +139,13 @@
             <div class="container">
                 <?php render_section_heading('VOUS AVEZ DES QUESTIONS ?', 'Les réponses aux questions <em>essentielles.</em>', 'Tout ce qu’il faut savoir pour avancer avec sérénité.', 'center'); ?>
                 <?php render_faqs($faqs, true); ?>
-                <div class="center-action"><a class="text-link text-link--dark" href="<?= page_url('faq') ?>">Voir toutes les questions <span>↗</span></a></div>
+                <div class="center-action"><a class="text-link text-link--dark" href="<?= page_url('faq') ?>">Voir toutes les questions <?= icon('arrow-up-right') ?></a></div>
             </div>
         </section>
 
         <section class="section blog-preview">
             <div class="container">
-                <div class="section-heading section-heading--split"><div><p class="eyebrow">NOS ACTUALITÉS</p><h2>Les dernières <em>informations.</em></h2></div><a class="button button--outline-dark" href="<?= page_url('blog') ?>">Toutes les actualités <span>↗</span></a></div>
+                <div class="section-heading section-heading--split"><div><p class="eyebrow">NOS ACTUALITÉS</p><h2>Les dernières <em>informations.</em></h2></div><a class="button button--outline-dark" href="<?= page_url('blog') ?>">Toutes les actualités <?= icon('arrow-up-right') ?></a></div>
                 <div class="blog-grid blog-grid--three"><?php foreach (array_slice($posts, 0, 3) as $post) { render_blog_card($post); } ?></div>
             </div>
         </section>
@@ -160,6 +160,6 @@
         </section>
 
         <section class="section contact-strip">
-            <div class="container contact-strip__inner"><div><p class="eyebrow eyebrow--light">BESOIN D’UN CONSEIL ?</p><h2>Votre projet immobilier<br><em>commence ici.</em></h2></div><a class="button button--light" href="<?= page_url('contact') ?>">Nous contacter <span>↗</span></a></div>
+            <div class="container contact-strip__inner"><div><p class="eyebrow eyebrow--light">BESOIN D’UN CONSEIL ?</p><h2>Votre projet immobilier<br><em>commence ici.</em></h2></div><a class="button button--light" href="<?= page_url('contact') ?>">Nous contacter <?= icon('arrow-up-right') ?></a></div>
         </section>
     </main>

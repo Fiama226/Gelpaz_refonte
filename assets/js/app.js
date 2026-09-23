@@ -48,6 +48,13 @@
     });
   }
 
+  const header = document.querySelector('.site-header');
+  if (header) {
+    const toggleHeader = () => header.classList.toggle('is-scrolled', window.scrollY > 90);
+    window.addEventListener('scroll', toggleHeader, { passive: true });
+    toggleHeader();
+  }
+
   const topButton = document.querySelector('.back-to-top');
   if (topButton) {
     window.addEventListener('scroll', () => {
@@ -91,9 +98,17 @@
       }
     };
 
+    const setPausedIcon = (isPaused) => {
+      const use = pauseButton?.querySelector('use');
+      if (!use) return;
+      const icon = isPaused ? '#i-play' : '#i-pause';
+      use.setAttribute('href', icon);
+      use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', icon);
+    };
+
     const setPaused = (value) => {
       paused = value;
-      pauseButton.textContent = paused ? '▶' : 'Ⅱ';
+      setPausedIcon(paused);
       pauseButton.setAttribute('aria-label', paused ? 'Lire le diaporama' : 'Mettre le diaporama en pause');
       startTimer();
     };

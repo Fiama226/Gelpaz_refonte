@@ -3,7 +3,42 @@ DirectoryIndex index.php
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
+
+    # Internal reference material must never be publicly downloadable
+    RewriteRule ^docs(/|$) - [F,L]
+    RewriteRule ^screenshots\.zip$ - [F,L]
+
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^ index.php [QSA,L]
 </IfModule>
+
+# --- Performance -----------------------------------------------------------
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml application/xml
+    AddOutputFilterByType DEFLATE application/javascript application/json image/svg+xml
+</IfModule>
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    # Version query strings are not used yet, so asset caches stay conservative.
+    ExpiresByType text/css "access plus 7 days"
+    ExpiresByType application/javascript "access plus 7 days"
+    ExpiresByType image/jpeg "access plus 30 days"
+    ExpiresByType image/png "access plus 30 days"
+    ExpiresByType image/webp "access plus 30 days"
+    ExpiresByType image/svg+xml "access plus 30 days"
+    ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+# --- Security --------------------------------------------------------------
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+# --- Privacy: hide dotfiles -------------------------------------------------
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>

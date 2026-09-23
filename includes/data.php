@@ -111,7 +111,7 @@ $properties = [
         'location' => 'Bassinko, Centre',
         'status' => 'Immédiatement disponible',
         'category' => 'Location',
-        'price' => '40.000 XOF',
+        'price' => '40.000 XOF / mois',
         'area' => '250 m²',
         'beds' => '02',
         'baths' => '01',
@@ -160,10 +160,10 @@ $posts = [
 ];
 
 $services = [
-    ['icon' => '⌂', 'title' => 'Vente de propriétés', 'text' => 'Trouvez un logement adapté à votre quotidien, à votre projet et à votre budget.'],
-    ['icon' => '↗', 'title' => 'Location', 'text' => 'Identifiez rapidement un cadre de vie agréable avec des informations claires à chaque étape.'],
-    ['icon' => '◈', 'title' => 'Gestion immobilière', 'text' => 'Valorisez, administrez et sécurisez votre patrimoine avec un interlocuteur fiable.'],
-    ['icon' => '⌕', 'title' => 'Conseil & expertise', 'text' => 'Appuyez vos décisions sur notre connaissance du marché immobilier burkinabè.'],
+    ['icon' => 'home', 'title' => 'Vente de propriétés', 'text' => 'Trouvez un logement adapté à votre quotidien, à votre projet et à votre budget.'],
+    ['icon' => 'key', 'title' => 'Location', 'text' => 'Identifiez rapidement un cadre de vie agréable avec des informations claires à chaque étape.'],
+    ['icon' => 'shield', 'title' => 'Gestion immobilière', 'text' => 'Valorisez, administrez et sécurisez votre patrimoine avec un interlocuteur fiable.'],
+    ['icon' => 'message', 'title' => 'Conseil & expertise', 'text' => 'Appuyez vos décisions sur notre connaissance du marché immobilier burkinabè.'],
 ];
 
 $testimonials = [
