@@ -1,0 +1,140 @@
+<?php
+/** Page view: home */
+?>
+    <main>
+        <section class="home-hero" style="--hero-image: url('<?= img_url($images['hero_alt']) ?>')">
+            <?php render_header(true); ?>
+            <div class="home-hero__shade"></div>
+            <div class="container home-hero__content">
+                <p class="eyebrow eyebrow--light">VOTRE PARTENAIRE IMMOBILIER AU BURKINA FASO</p>
+                <h1>La différence,<br><em>c’est notre</em> engagement.</h1>
+                <p class="home-hero__copy">Des solutions immobilières pensées pour vous, un accompagnement qui fait toute la différence.</p>
+                <div class="button-row">
+                    <a class="button button--accent" href="<?= page_url('properties') ?>">Découvrir nos logements <span>↗</span></a>
+                    <a class="button button--outline-light" href="<?= page_url('contact') ?>">Parler à un conseiller</a>
+                </div>
+                <div class="home-hero__proof">
+                    <span class="avatar-stack"><i>G</i><i>I</i><i>M</i></span>
+                    <span><b>+30 ans</b><small>d’expérience immobilière</small></span>
+                    <span class="proof-line"></span>
+                    <span><b>100%</b><small>d’écoute &amp; d’engagement</small></span>
+                </div>
+            </div>
+            <a class="scroll-cue" href="#intro"><span>↓</span> Découvrir</a>
+        </section>
+
+        <section class="section intro-section" id="intro">
+            <div class="container split-section">
+                <div class="split-section__media media-frame">
+                    <img src="<?= img_url($images['hero']) ?>" alt="Une maison proposée par Gelpaz Immo" loading="lazy">
+                    <span class="media-frame__caption">L’immobilier avec une vision humaine</span>
+                </div>
+                <div class="split-section__content">
+                    <p class="eyebrow">GELPAZ IMMO · LA DIFFÉRENCE</p>
+                    <h2>Créer de la valeur,<br><em>habiter mieux.</em></h2>
+                    <p class="lead">Depuis plus de 30 ans, GELPAZ IMMO accompagne les familles et les investisseurs dans la concrétisation de leurs projets immobiliers au Burkina Faso.</p>
+                    <p>Nous plaçons l’écoute, la transparence et le professionnalisme au cœur de chaque relation pour vous proposer une expérience simple, sereine et adaptée à vos attentes.</p>
+                    <a class="text-link text-link--dark" href="<?= page_url('about') ?>">Découvrir notre histoire <span>↗</span></a>
+                    <div class="stats-row">
+                        <div><strong>30<sup>+</sup></strong><span>ans d’expérience</span></div>
+                        <div><strong>6</strong><span>offres à découvrir</span></div>
+                        <div><strong>1</strong><span>objectif : votre satisfaction</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="container logo-strip">
+                <span>Ils nous font confiance</span>
+                <b>GELPAZ</b><b>IMMO</b><b>BURKINA</b><b>PARTENAIRES</b><b>PROJETS</b>
+            </div>
+        </section>
+
+        <section class="section section--dark featured-section">
+            <div class="container">
+                <?php render_section_heading('NOS LOGEMENTS', 'Des espaces qui vous <em>ressemblent.</em>', 'Découvrez une sélection de logements de qualité, pensés pour votre quotidien.', 'center'); ?>
+                <div class="featured-grid">
+                    <?php foreach (array_slice($properties, 0, 3) as $property): ?>
+                        <article class="featured-property">
+                            <a href="<?= page_url('property', ['id' => $property['id']]) ?>" class="featured-property__image">
+                                <img src="<?= img_url($property['image']) ?>" alt="<?= e($property['title']) ?>" loading="lazy">
+                                <span class="play-dot">↗</span>
+                            </a>
+                            <div class="featured-property__info">
+                                <div><p><?= e($property['location']) ?></p><h3><?= e($property['title']) ?></h3></div>
+                                <strong><?= e($property['price']) ?></strong>
+                            </div>
+                            <div class="featured-property__meta"><span><?= e($property['beds']) ?> chambres</span><span><?= e($property['baths']) ?> salles d’eau</span><span><?= e($property['area']) ?></span></div>
+                        </article>
+                    <?php endforeach; ?>
+                </div>
+                <div class="center-action"><a class="button button--light" href="<?= page_url('properties') ?>">Voir tous nos logements <span>↗</span></a></div>
+            </div>
+        </section>
+
+        <section class="section services-preview">
+            <div class="container">
+                <?php render_section_heading('NOTRE SAVOIR-FAIRE', 'Des solutions immobilières <em>complètes.</em>', 'De la recherche à la réalisation, nous sommes à vos côtés.', 'center'); ?>
+                <div class="service-cards">
+                    <?php foreach ($services as $service): ?>
+                        <article class="service-card"><span class="service-card__icon"><?= e($service['icon']) ?></span><h3><?= e($service['title']) ?></h3><p><?= e($service['text']) ?></p><a href="<?= page_url('services') ?>" aria-label="En savoir plus sur <?= e($service['title']) ?>">↗</a></article>
+                    <?php endforeach; ?>
+                </div>
+                <div class="process-feature">
+                    <div class="process-feature__image"><img src="<?= img_url($images['villa']) ?>" alt="Une villa Gelpaz Immo" loading="lazy"></div>
+                    <div class="process-feature__content"><p class="eyebrow">SIMPLE, CLAIR, HUMAIN</p><h2>Votre projet,<br><em>notre accompagnement.</em></h2><p>Choisissez votre propriété, échangez avec notre équipe et avancez sereinement vers la réalisation de votre projet.</p><a class="button button--dark" href="<?= page_url('services') ?>">Comment ça marche ? <span>↗</span></a></div>
+                </div>
+                <div class="steps-row">
+                    <div><span>01</span><h3>Choisir</h3><p>Explorez les biens qui correspondent à votre projet.</p></div>
+                    <div><span>02</span><h3>Échanger</h3><p>Notre équipe répond à vos questions et vous conseille.</p></div>
+                    <div><span>03</span><h3>Réserver</h3><p>Validez votre choix avec un accompagnement clair.</p></div>
+                    <div><span>04</span><h3>Concrétiser</h3><p>Donnez vie à votre projet en toute confiance.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section team-preview section--soft">
+            <div class="container">
+                <?php render_section_heading('UNE ÉQUIPE À VOS CÔTÉS', 'Des experts derrière chaque <em>projet.</em>', 'Une équipe engagée pour vous apporter les bons conseils au bon moment.', 'center'); ?>
+                <div class="team-grid">
+                    <?php foreach ($team as $member): ?><article class="team-card"><img src="<?= img_url($member['image']) ?>" alt="<?= e($member['name']) ?>" loading="lazy"><h3><?= e($member['name']) ?></h3><p><?= e($member['role']) ?></p></article><?php endforeach; ?>
+                </div>
+                <div class="center-action"><a class="text-link text-link--dark" href="<?= page_url('about') ?>">Faire connaissance avec GELPAZ <span>↗</span></a></div>
+            </div>
+        </section>
+
+        <section class="section testimonials-section">
+            <div class="container testimonial-layout">
+                <div class="testimonial-copy"><p class="eyebrow">ILS NOUS FONT CONFIANCE</p><h2>Écoutez ceux qui ont choisi <em>Gelpaz.</em></h2><p>Chaque projet est unique. Les histoires de nos clients sont la meilleure preuve de notre engagement.</p><a class="button button--dark" href="<?= page_url('contact') ?>">Parlons de votre projet <span>↗</span></a></div>
+                <div class="testimonial-list">
+                    <?php foreach ($testimonials as $testimonial): ?><article class="testimonial"><span class="quote-mark">“</span><p><?= e($testimonial['text']) ?></p><div class="testimonial__author"><span><?= e(initials($testimonial['name'])) ?></span><div><strong><?= e($testimonial['name']) ?></strong><small><?= e($testimonial['role']) ?></small></div></div></article><?php endforeach; ?>
+                </div>
+            </div>
+        </section>
+
+        <section class="section faq-section section--soft">
+            <div class="container">
+                <?php render_section_heading('VOUS AVEZ DES QUESTIONS ?', 'Les réponses aux questions <em>essentielles.</em>', 'Tout ce qu’il faut savoir pour avancer avec sérénité.', 'center'); ?>
+                <?php render_faqs($faqs, true); ?>
+                <div class="center-action"><a class="text-link text-link--dark" href="<?= page_url('faq') ?>">Voir toutes les questions <span>↗</span></a></div>
+            </div>
+        </section>
+
+        <section class="section blog-preview">
+            <div class="container">
+                <div class="section-heading section-heading--split"><div><p class="eyebrow">NOS ACTUALITÉS</p><h2>Les dernières <em>informations.</em></h2></div><a class="button button--outline-dark" href="<?= page_url('blog') ?>">Toutes les actualités <span>↗</span></a></div>
+                <div class="blog-grid blog-grid--three"><?php foreach (array_slice($posts, 0, 3) as $post) { render_blog_card($post); } ?></div>
+            </div>
+        </section>
+
+        <section class="section partners-section">
+            <div class="container">
+                <?php render_section_heading('ILS NOUS ACCOMPAGNENT', 'Des partenaires de <em>confiance.</em>', 'Nous travaillons avec des acteurs engagés pour vous offrir des projets solides et durables.', 'center'); ?>
+                <div class="partner-grid">
+                    <?php foreach (['partner_one', 'partner_two', 'partner_three', 'partner_four'] as $partner): ?><div class="partner-logo"><img src="<?= img_url($images[$partner]) ?>" alt="Partenaire GELPAZ IMMO" loading="lazy"></div><?php endforeach; ?>
+                </div>
+            </div>
+        </section>
+
+        <section class="section contact-strip">
+            <div class="container contact-strip__inner"><div><p class="eyebrow eyebrow--light">BESOIN D’UN CONSEIL ?</p><h2>Votre projet immobilier<br><em>commence ici.</em></h2></div><a class="button button--light" href="<?= page_url('contact') ?>">Nous contacter <span>↗</span></a></div>
+        </section>
+    </main>

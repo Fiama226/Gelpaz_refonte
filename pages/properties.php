@@ -1,0 +1,8 @@
+<?php
+/** Page view: properties */
+?>
+    <?php render_interior_hero('Nos logements', 'Nos offres', $images['hero']); ?>
+    <main>
+        <section class="section properties-page"><div class="container"><div class="section-heading section-heading--split"><div><p class="eyebrow">NOS OFFRES IMMOBILIÈRES</p><h2>Votre prochaine adresse<br><em>est peut-être ici.</em></h2></div><p class="section-heading__copy">Vente ou location, découvrez nos logements pensés pour une vie confortable et durable au Burkina Faso.</p></div><div class="filter-bar"><span><b><?= count($visible_properties) ?></b> propriétés trouvées</span><div class="filter-links"><a class="<?= $property_filter === 'all' ? 'is-active' : '' ?>" href="<?= page_url('properties') ?>">Toutes</a><a class="<?= $property_filter === 'vente' ? 'is-active' : '' ?>" href="<?= page_url('properties', ['filter' => 'vente']) ?>">Vente</a><a class="<?= $property_filter === 'location' ? 'is-active' : '' ?>" href="<?= page_url('properties', ['filter' => 'location']) ?>">Location</a></div><select aria-label="Trier les propriétés"><option>Plus récent d’abord</option><option>Surface croissante</option></select></div><div class="property-grid"><?php foreach ($visible_properties as $property) { render_property_card($property); } ?></div></div></section>
+        <section class="section section--soft"><div class="container property-callout"><div><p class="eyebrow">VOUS NE TROUVEZ PAS VOTRE BONHEUR ?</p><h2>Parlons de votre recherche<br><em>sur mesure.</em></h2></div><a class="button button--dark" href="<?= page_url('contact') ?>">Nous contacter <span>↗</span></a></div></section>
+    </main>
