@@ -250,10 +250,12 @@ $testimonials = [
     ['name' => 'Margerite KAMBOU', 'role' => "Résidente à la cité de l'intégration depuis décembre 2022", 'text' => 'Je suis satisfaite à 100 %. La promesse de viabilisation a été tenue. Je recommande GELPAZ IMMO !'],
 ];
 
+// "photo" attend le portrait réel du collaborateur. Tant qu'il est vide, la carte
+// affiche un monogramme de marque : mieux vaut aucune photo qu'un visage d'emprunt.
 $team = [
-    ['name' => 'L’équipe Gelpaz', 'role' => 'Conseil immobilier', 'image' => 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=700&q=85'],
-    ['name' => 'Nos conseillers', 'role' => 'Accompagnement client', 'image' => 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=700&q=85'],
-    ['name' => 'Nos experts', 'role' => 'Expertise immobilière', 'image' => 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=700&q=85'],
+    ['name' => 'L’équipe Gelpaz', 'role' => 'Conseil immobilier', 'photo' => '', 'photo_alt' => ''],
+    ['name' => 'Nos conseillers', 'role' => 'Accompagnement client', 'photo' => '', 'photo_alt' => ''],
+    ['name' => 'Nos experts', 'role' => 'Expertise immobilière', 'photo' => '', 'photo_alt' => ''],
 ];
 
 $faqs = [

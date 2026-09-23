@@ -26,14 +26,24 @@ DirectoryIndex index.php
 
 <IfModule mod_expires.c>
     ExpiresActive On
-    # Version query strings are not used yet, so asset caches stay conservative.
-    ExpiresByType text/css "access plus 7 days"
-    ExpiresByType application/javascript "access plus 7 days"
-    ExpiresByType image/jpeg "access plus 30 days"
-    ExpiresByType image/png "access plus 30 days"
-    ExpiresByType image/webp "access plus 30 days"
-    ExpiresByType image/svg+xml "access plus 30 days"
+    # CSS/JS are referenced with a ?v=<filemtime> stamp (see asset_version()),
+    # so they can be cached for a year; images are immutable files.
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
     ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js|jpe?g|png|webp|svg)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    <FilesMatch "\.(php|html?)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
 </IfModule>
 
 # --- Security --------------------------------------------------------------

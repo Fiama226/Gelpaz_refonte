@@ -71,6 +71,18 @@ function image_attrs(string $url, string $sizes = '100vw'): string
  * <img> tag for Gelpaz media with width/height (avoids layout shift),
  * lazy loading and responsive candidates.
  */
+/**
+ * srcset/sizes attributes valid on <link rel="preload" as="image">.
+ */
+function image_preload_attrs(string $url, string $sizes = '100vw'): string
+{
+    $small = image_small($url);
+    if ($small === '') {
+        return '';
+    }
+    return ' imagesrcset="' . e($url) . ' 835w, ' . e($small) . ' 525w" imagesizes="' . e($sizes) . '"';
+}
+
 function render_image(string $url, string $alt, string $sizes = '100vw', string $class = '', bool $lazy = true, int $width = 835, int $height = 467): void
 {
     echo '<img src="' . img_url($url) . '" alt="' . e($alt) . '"'
@@ -273,4 +285,30 @@ function render_faqs(array $faqs, bool $short = false): void
         <?php endforeach; ?>
     </div>
     <?php
+}
+
+/**
+ * Team card. Renders the real portrait when one is provided, otherwise a
+ * branded monogram instead of a stand-in stock photo.
+ */
+function render_team_card(array $member): void
+{
+    ?>
+    <article class="team-card">
+        <?php if (!empty($member['photo'])): ?>
+            <?php render_image($member['photo'], $member['photo_alt'] !== '' ? $member['photo_alt'] : $member['name'], '(max-width: 760px) 92vw, 340px', 'team-card__photo'); ?>
+        <?php else: ?>
+            <div class="team-card__monogram" role="img" aria-label="<?= e($member['name']) ?> — portrait à venir"><span><?= e(initials($member['name'])) ?></span></div>
+        <?php endif; ?>
+        <h3><?= e($member['name']) ?></h3>
+        <p><?= e($member['role']) ?></p>
+    </article>
+    <?php
+}
+
+function asset_version(string $relative_path): string
+{
+    $file = __DIR__ . '/../' . ltrim($relative_path, '/');
+    $stamp = is_file($file) ? filemtime($file) : false;
+    return $stamp ? (string) $stamp : '1';
 }

@@ -76,7 +76,9 @@
     let timer;
     let paused = reducedMotion.matches;
 
-    const updateSlide = (index) => {
+    const status = hero.querySelector('[data-slide-status]');
+
+    const updateSlide = (index, announce = false) => {
       activeIndex = (index + slides.length) % slides.length;
       slides.forEach((slide, slideIndex) => {
         slide.classList.toggle('is-active', slideIndex === activeIndex);
@@ -84,6 +86,10 @@
       dots.forEach((dot, dotIndex) => {
         dot.setAttribute('aria-current', String(dotIndex === activeIndex));
       });
+      // only user-initiated changes are announced: auto-rotation stays silent
+      if (announce && status) {
+        status.textContent = `Image ${activeIndex + 1} sur ${slides.length}`;
+      }
     };
 
     const stopTimer = () => {
@@ -113,10 +119,10 @@
       startTimer();
     };
 
-    previousButton?.addEventListener('click', () => updateSlide(activeIndex - 1));
-    nextButton?.addEventListener('click', () => updateSlide(activeIndex + 1));
+    previousButton?.addEventListener('click', () => updateSlide(activeIndex - 1, true));
+    nextButton?.addEventListener('click', () => updateSlide(activeIndex + 1, true));
     pauseButton?.addEventListener('click', () => setPaused(!paused));
-    dots.forEach((dot) => dot.addEventListener('click', () => updateSlide(Number(dot.dataset.slideTo))));
+    dots.forEach((dot) => dot.addEventListener('click', () => updateSlide(Number(dot.dataset.slideTo), true)));
     hero.addEventListener('mouseenter', stopTimer);
     hero.addEventListener('mouseleave', startTimer);
     hero.addEventListener('focusin', stopTimer);

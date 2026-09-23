@@ -3,7 +3,7 @@
 ?>
     <main id="main">
         <section class="home-hero" aria-label="GELPAZ IMMO, votre partenaire immobilier">
-            <div class="hero-slideshow" aria-live="polite">
+            <div class="hero-slideshow">
                 <?php foreach ($hero_slides as $index => $slide): ?>
                     <figure class="hero-slide <?= $index === 0 ? 'is-active' : '' ?>" data-slide-index="<?= $index ?>">
                         <img src="<?= img_url($slide['image']) ?>" alt="<?= e($slide['alt']) ?>" width="835" height="467"<?= image_attrs($slide['image'], '100vw') ?> decoding="async" <?= $index === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?>>
@@ -12,6 +12,7 @@
             </div>
             <?php render_header(true); ?>
             <div class="home-hero__shade"></div>
+            <p class="sr-only" data-slide-status aria-live="polite"></p>
             <div class="container home-hero__content">
                 <p class="eyebrow eyebrow--light">VOTRE PARTENAIRE IMMOBILIER AU BURKINA FASO</p>
                 <h1>La différence,<br><em>c’est notre</em> engagement.</h1>
@@ -120,7 +121,7 @@
             <div class="container">
                 <?php render_section_heading('UNE ÉQUIPE À VOS CÔTÉS', 'Des experts derrière chaque <em>projet.</em>', 'Une équipe engagée pour vous apporter les bons conseils au bon moment.', 'center'); ?>
                 <div class="team-grid">
-                    <?php foreach ($team as $member): ?><article class="team-card"><img src="<?= img_url($member['image']) ?>" alt="<?= e($member['name']) ?>" width="700" height="700" sizes="(max-width: 760px) 92vw, 340px" loading="lazy" decoding="async"><h3><?= e($member['name']) ?></h3><p><?= e($member['role']) ?></p></article><?php endforeach; ?>
+                    <?php foreach ($team as $member): ?><?php render_team_card($member); ?><?php endforeach; ?>
                 </div>
                 <div class="center-action"><a class="text-link text-link--dark" href="<?= page_url('about') ?>">Faire connaissance avec GELPAZ <?= icon('arrow-up-right') ?></a></div>
             </div>

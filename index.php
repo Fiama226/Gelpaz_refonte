@@ -27,7 +27,10 @@ $og_image = 'https://gelpaz.com' . img_url($current_page === 'property' ? $selec
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/style.css">
+<?php if ($current_page === 'home'): ?>
+    <link rel="preload" as="image" href="<?= img_url($hero_slides[0]['image']) ?>"<?= image_preload_attrs($hero_slides[0]['image'], '100vw') ?> fetchpriority="high">
+<?php endif; ?>
+    <link rel="stylesheet" href="/assets/css/style.css?v=<?= asset_version('assets/css/style.css') ?>">
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -48,6 +51,6 @@ $og_image = 'https://gelpaz.com' . img_url($current_page === 'property' ? $selec
 <?php require __DIR__ . '/pages/' . $current_page . '.php'; ?>
 <?php require __DIR__ . '/pages/gallery-lightbox.php'; ?>
 <?php render_footer(); ?>
-<script src="/assets/js/app.js"></script>
+<script src="/assets/js/app.js?v=<?= asset_version('assets/js/app.js') ?>"></script>
 </body>
 </html>
