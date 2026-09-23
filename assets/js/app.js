@@ -12,9 +12,16 @@
     });
 
     nav.querySelectorAll('.nav-dropdown > button').forEach((button) => {
-      button.addEventListener('click', () => {
-        const open = button.parentElement.classList.toggle('is-open');
+      const dropdown = button.parentElement;
+      const setOpen = (open) => {
+        dropdown.classList.toggle('is-open', open);
         button.setAttribute('aria-expanded', String(open));
+      };
+      button.addEventListener('click', () => setOpen(!dropdown.classList.contains('is-open')));
+      dropdown.addEventListener('mouseenter', () => { if (window.matchMedia('(min-width: 761px)').matches) setOpen(true); });
+      dropdown.addEventListener('mouseleave', () => { if (window.matchMedia('(min-width: 761px)').matches && !dropdown.contains(document.activeElement)) setOpen(false); });
+      dropdown.addEventListener('focusout', (event) => {
+        if (!dropdown.contains(event.relatedTarget)) setOpen(false);
       });
     });
 
@@ -109,13 +116,4 @@
     startTimer();
   }
 
-  document.querySelectorAll('form').forEach((form) => {
-    form.addEventListener('submit', (event) => {
-      if (form.classList.contains('newsletter-form')) {
-        event.preventDefault();
-        const button = form.querySelector('button');
-        if (button) button.textContent = '✓';
-      }
-    });
-  });
 })();
