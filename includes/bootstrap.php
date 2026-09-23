@@ -17,6 +17,8 @@ $route_map = [
     'blog-list-no-sidebar-2' => 'blog',
     'article' => 'post',
     'contact-us' => 'contact',
+    'mentions-legales' => 'legal',
+    'politique-de-confidentialite' => 'legal',
     'nos-realisations' => 'properties',
     'team' => 'team',
     'faq' => 'faq',
@@ -27,14 +29,26 @@ if (str_starts_with($path, 'estate_property/')) {
     $route_page = 'property';
     $_GET['id'] = basename($path);
 }
+if (str_starts_with($path, 'article/')) {
+    $route_page = 'post';
+    $_GET['slug'] = basename($path);
+}
 if ($route_page === 'properties' && $path === 'property_action_category/vente') {
     $_GET['filter'] = 'vente';
 }
-$allowed_pages = ['home', 'about', 'services', 'properties', 'property', 'blog', 'post', 'contact', 'team', 'faq', 'pricing'];
+$allowed_pages = ['home', 'about', 'services', 'properties', 'property', 'blog', 'post', 'contact', 'team', 'faq', 'pricing', 'legal'];
 $requested_page = (string) ($_GET['page'] ?? $route_page ?? 'home');
 $is_404 = !in_array($requested_page, $allowed_pages, true);
 if ($is_404) {
     http_response_code(404);
+}
+
+$post_slug = trim((string) ($_GET['slug'] ?? ''));
+$selected_post = $post_slug !== '' ? post_by_slug($post_slug) : $posts[0];
+if ($post_slug !== '' && $selected_post === null) {
+    $is_404 = true;
+    http_response_code(404);
+    $current_page = '404';
 }
 $current_page = $is_404 ? '404' : $requested_page;
 $GLOBALS['current_page'] = $current_page;
@@ -107,6 +121,7 @@ function meta_description(string $page): string
         'team' => 'Rencontrez l’équipe GELPAZ IMMO : des conseillers à votre écoute pour tous vos projets immobiliers au Burkina Faso.',
         'faq' => 'Réponses aux questions fréquentes sur l’achat, la location et la souscription de logements avec GELPAZ IMMO.',
         'pricing' => 'Découvrez les offres et les modalités de souscription logement proposées par GELPAZ IMMO.',
+        'legal' => 'Mentions légales, protection des données et politique de confidentialité du site GELPAZ IMMO.',
         '404' => 'La page demandée est introuvable. Retrouvez nos logements et notre équipe depuis l’accueil du site GELPAZ IMMO.',
     ];
     return $descriptions[$page] ?? $descriptions['home'];

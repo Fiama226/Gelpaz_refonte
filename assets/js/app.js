@@ -131,4 +131,83 @@
     startTimer();
   }
 
+
+  /* Gelpaz media is hotlinked: if a larger variant is missing on the source
+     server, fall back to the smaller one instead of showing a broken image. */
+  const applyFallback = (image) => {
+    const fallback = image.dataset.fallback;
+    if (!fallback || image.dataset.fallbackUsed) return;
+    image.dataset.fallbackUsed = 'true';
+    image.removeAttribute('srcset');
+    image.src = fallback;
+  };
+  document.querySelectorAll('img[data-fallback]').forEach((image) => {
+    image.addEventListener('error', () => applyFallback(image));
+    // the error may already have fired while the page was parsing
+    if (image.complete && image.naturalWidth === 0) applyFallback(image);
+  });
+
+  /* Property gallery lightbox */
+  const lightbox = document.querySelector('.lightbox');
+  const gallery = document.querySelector('[data-gallery]');
+  if (lightbox && gallery) {
+    const allTriggers = [...gallery.querySelectorAll('[data-lightbox-open]')];
+    const thumbs = allTriggers.filter((trigger) => trigger.dataset.photo);
+    const triggers = thumbs.length ? thumbs : allTriggers;
+    const images = triggers.map((trigger) => trigger.dataset.photo
+      || trigger.querySelector('img')?.getAttribute('src'));
+    const alts = triggers.map((trigger) => trigger.querySelector('img')?.alt || '');
+    // the main photo mirrors the first thumbnail: point its trigger at that slide
+    const mainTrigger = allTriggers.find((trigger) => !trigger.dataset.photo);
+    const mainIndex = mainTrigger
+      ? Math.max(0, images.indexOf(mainTrigger.querySelector('img')?.getAttribute('src')))
+      : -1;
+    const stage = lightbox.querySelector('[data-lightbox-image]');
+    const caption = lightbox.querySelector('[data-lightbox-caption]');
+    const previous = lightbox.querySelector('[data-lightbox-previous]');
+    const next = lightbox.querySelector('[data-lightbox-next]');
+    const close = () => {
+      lightbox.classList.remove('is-open');
+      lightbox.hidden = true;
+      document.body.classList.remove('is-menu-open');
+      lastTrigger?.focus();
+    };
+    let current = 0;
+    let lastTrigger = null;
+
+    const show = (index) => {
+      current = (index + images.length) % images.length;
+      stage.src = images[current];
+      stage.alt = alts[current] || '';
+      caption.textContent = `${current + 1} / ${images.length}`;
+      gallery.querySelectorAll('.property-gallery__thumbs button').forEach((button, buttonIndex) => {
+        button.setAttribute('aria-current', String(buttonIndex === current));
+      });
+    };
+
+    allTriggers.forEach((trigger) => {
+      const index = trigger === mainTrigger ? mainIndex : triggers.indexOf(trigger);
+      trigger.addEventListener('click', () => {
+        lastTrigger = trigger;
+        show(index);
+        lightbox.hidden = false;
+        requestAnimationFrame(() => lightbox.classList.add('is-open'));
+        document.body.classList.add('is-menu-open');
+        lightbox.querySelector('[data-lightbox-close]')?.focus();
+      });
+    });
+
+    previous?.addEventListener('click', () => show(current - 1));
+    next?.addEventListener('click', () => show(current + 1));
+    lightbox.querySelector('[data-lightbox-close]')?.addEventListener('click', close);
+    lightbox.addEventListener('click', (event) => {
+      if (event.target === lightbox) close();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (lightbox.hidden) return;
+      if (event.key === 'Escape') close();
+      if (event.key === 'ArrowLeft') show(current - 1);
+      if (event.key === 'ArrowRight') show(current + 1);
+    });
+  }
 })();

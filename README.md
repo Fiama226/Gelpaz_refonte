@@ -65,9 +65,19 @@ Régénérer après une modification du header/footer : `python3 screenshots_rev
 - Conversion : formulaire de contact fonctionnel (honeypot, états succès/erreur, champs conservés), bloc WhatsApp dans le footer, bouton WhatsApp flottant avec message pré-rempli, CTA WhatsApp pré-rempli sur chaque carte de propriété, horaires affichés.
 - SEO/perf : favicons, Open Graph, canonical, JSON-LD, `robots`/cache/compression/en-têtes de sécurité dans `.htaccess`, kit de référence retiré de la racine publique (`docs/` bloqué), lien d’évitement clavier.
 
-### Reste à faire (P1/P2)
+### Itération 2 (P1)
 
-- Remplacer les visuels distants par des images auto-hébergées en haute définition (le contenu utilise encore les URLs d’origine de gelpaz.com, conformément à l’objectif de fidélité).
-- Photos/noms réels de l’équipe, logos de partenaires authentiques, articles de blog réellement distincts (routage par article).
-- Carte interactive (Leaflet/OSM) à la place des visuels de carte CSS, mentions légales et politique de confidentialité, lightbox de galerie.
-- Réorganisation complète de `style.css` (tokens d’espacement, reset en tête de fichier, minification et versionnage des assets pour des caches longs).
+- Visuels : passage des vignettes WordPress 525 px aux variantes **835 px** (`srcset` 835/525, repli automatique si une variante manque, `width`/`height` pour supprimer les décalages de mise en page, `decoding="async"`).
+- Galeries : chaque logement affiche désormais de **vraies photos** de son dossier (média Gelpaz) avec visionneuse accessible (Échap, flèches, piégeage du focus simple) au lieu d’images sans rapport.
+- Actualités : **un article par page** (`/article/<slug>`) avec titre, date ISO, contenu rédigé, partage WhatsApp/e-mail, articles récents et « à lire aussi » réellement distincts.
+- Légal : pages **Mentions légales** et **Politique de confidentialité** (`/mentions-legales`), liens dans le pied de page et sous la case de consentement du formulaire.
+- Cartes : intégration **OpenStreetMap** (sans clé d’API) sur la page contact et la fiche propriété, avec carte descriptive et lien « itinéraire ».
+- SEO : `robots.txt`, `sitemap.php` (aussi exposé en `/sitemap.xml`) généré depuis les pages, logements et articles réels.
+- Conversion : encart CTA dans la colonne des articles, pied de page orienté WhatsApp, horaires visibles.
+
+### Reste à faire (P2)
+
+- Photos/noms réels de l’équipe et logos de partenaires authentiques (le site utilise encore des visuels de banque d’images pour l’équipe).
+- Auto-hébergement des visuels + conversion WebP/AVIF : `tools/fetch-media.sh` liste les URLs à rapatrier sur un poste connecté, puis il suffit de remplacer `$images` par des chemins locaux.
+- Réorganisation complète de `style.css` (échelle d’espacement, reset en tête de fichier, minification et versionnage des assets pour des caches longs).
+- Consolidation de la galerie par bien quand le client fournit le dossier photo complet de chaque modèle.

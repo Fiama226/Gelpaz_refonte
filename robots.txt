@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /docs/
+Disallow: /includes/
+Disallow: /screenshots.zip
+
+Sitemap: https://gelpaz.com/sitemap.php

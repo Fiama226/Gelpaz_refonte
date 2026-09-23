@@ -6,7 +6,7 @@
             <div class="hero-slideshow" aria-live="polite">
                 <?php foreach ($hero_slides as $index => $slide): ?>
                     <figure class="hero-slide <?= $index === 0 ? 'is-active' : '' ?>" data-slide-index="<?= $index ?>">
-                        <img src="<?= img_url($slide['image']) ?>" alt="<?= e($slide['alt']) ?>" width="525" height="328" <?= $index === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?>>
+                        <img src="<?= img_url($slide['image']) ?>" alt="<?= e($slide['alt']) ?>" width="835" height="467"<?= image_attrs($slide['image'], '100vw') ?> decoding="async" <?= $index === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?>>
                     </figure>
                 <?php endforeach; ?>
             </div>
@@ -51,7 +51,7 @@
         <section class="section intro-section" id="intro">
             <div class="container split-section">
                 <div class="split-section__media media-frame">
-                    <img src="<?= img_url($images['hero']) ?>" alt="Une maison proposée par Gelpaz Immo" loading="lazy">
+                    <?php render_image($images['hero'], 'Une maison proposée par Gelpaz Immo', '(max-width: 900px) 92vw, 560px'); ?>
                     <span class="media-frame__caption">L’immobilier avec une vision humaine</span>
                 </div>
                 <div class="split-section__content">
@@ -80,7 +80,7 @@
                     <?php foreach (array_slice($properties, 0, 3) as $property): ?>
                         <article class="featured-property">
                             <a href="<?= page_url('property', ['id' => $property['id']]) ?>" class="featured-property__image">
-                                <img src="<?= img_url($property['image']) ?>" alt="<?= e($property['title']) ?>" loading="lazy">
+                                <?php render_image($property['image'], $property['title'], '(max-width: 900px) 92vw, 760px'); ?>
                                 <span class="play-dot"><?= icon('arrow-up-right') ?></span>
                             </a>
                             <div class="featured-property__info">
@@ -104,7 +104,7 @@
                     <?php endforeach; ?>
                 </div>
                 <div class="process-feature">
-                    <div class="process-feature__image"><img src="<?= img_url($images['villa']) ?>" alt="Une villa Gelpaz Immo" loading="lazy"></div>
+                    <div class="process-feature__image"><?php render_image($images['villa'], 'Une villa Gelpaz Immo', '(max-width: 900px) 92vw, 520px'); ?></div>
                     <div class="process-feature__content"><p class="eyebrow">SIMPLE, CLAIR, HUMAIN</p><h2>Votre projet,<br><em>notre accompagnement.</em></h2><p>Choisissez votre propriété, échangez avec notre équipe et avancez sereinement vers la réalisation de votre projet.</p><a class="button button--dark" href="<?= page_url('services') ?>">Comment ça marche ? <?= icon('arrow-up-right') ?></a></div>
                 </div>
                 <div class="steps-row">
@@ -120,7 +120,7 @@
             <div class="container">
                 <?php render_section_heading('UNE ÉQUIPE À VOS CÔTÉS', 'Des experts derrière chaque <em>projet.</em>', 'Une équipe engagée pour vous apporter les bons conseils au bon moment.', 'center'); ?>
                 <div class="team-grid">
-                    <?php foreach ($team as $member): ?><article class="team-card"><img src="<?= img_url($member['image']) ?>" alt="<?= e($member['name']) ?>" loading="lazy"><h3><?= e($member['name']) ?></h3><p><?= e($member['role']) ?></p></article><?php endforeach; ?>
+                    <?php foreach ($team as $member): ?><article class="team-card"><img src="<?= img_url($member['image']) ?>" alt="<?= e($member['name']) ?>" width="700" height="700" sizes="(max-width: 760px) 92vw, 340px" loading="lazy" decoding="async"><h3><?= e($member['name']) ?></h3><p><?= e($member['role']) ?></p></article><?php endforeach; ?>
                 </div>
                 <div class="center-action"><a class="text-link text-link--dark" href="<?= page_url('about') ?>">Faire connaissance avec GELPAZ <?= icon('arrow-up-right') ?></a></div>
             </div>

@@ -4,9 +4,14 @@ DirectoryIndex index.php
     RewriteEngine On
     RewriteBase /
 
-    # Internal reference material must never be publicly downloadable
+    # Internal material must never be publicly downloadable
     RewriteRule ^docs(/|$) - [F,L]
+    RewriteRule ^tools(/|$) - [F,L]
+    RewriteRule ^includes(/|$) - [F,L]
     RewriteRule ^screenshots\.zip$ - [F,L]
+
+    # Conventional sitemap URL
+    RewriteRule ^sitemap\.xml$ sitemap.php [L]
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d

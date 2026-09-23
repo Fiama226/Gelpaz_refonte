@@ -80,7 +80,7 @@ function render_footer(): void
         </div>
         <div class="container footer-bottom">
             <a class="brand brand--footer" href="<?= page_url('home') ?>"><img src="/assets/images/logo-white.png" alt="GELPAZ IMMO" width="270" height="165"></a>
-            <p>© <?= date('Y') ?> GELPAZ IMMO. Tous droits réservés.</p>
+            <p>© <?= date('Y') ?> GELPAZ IMMO. Tous droits réservés. <a href="<?= page_url('legal') ?>">Mentions légales</a> · <a href="<?= page_url('legal', ['section' => 'confidentialite']) ?>">Confidentialité</a></p>
             <div class="footer-socials" aria-label="Nous contacter">
                 <a href="https://wa.me/22667308185" target="_blank" rel="noopener noreferrer" aria-label="Contacter GELPAZ IMMO sur WhatsApp"><?= icon('whatsapp') ?></a>
                 <a href="tel:+22625371055" aria-label="Appeler GELPAZ IMMO"><?= icon('phone') ?></a>

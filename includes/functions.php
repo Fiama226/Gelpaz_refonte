@@ -25,6 +25,11 @@ function page_url(string $page = 'home', array $params = []): string
         unset($params['id']);
         $path .= rawurlencode($property_id);
     }
+    if ($page === 'post' && isset($params['slug'])) {
+        $slug = (string) $params['slug'];
+        unset($params['slug']);
+        $path .= $slug !== '' ? '/' . rawurlencode($slug) : '';
+    }
     $query = $params ? '?' . http_build_query($params) : '';
     return '/' . $path . $query;
 }
@@ -37,6 +42,66 @@ function is_page(string $page): bool
 function img_url(string $url): string
 {
     return e($url);
+}
+
+/**
+ * Smaller WordPress variant used as a graceful fallback (see the img error
+ * handler in app.js) and as the second srcset candidate.
+ */
+function image_small(string $url): string
+{
+    return str_contains($url, '-835x467') ? str_replace('-835x467', '-525x328', $url) : '';
+}
+
+/**
+ * srcset/sizes/data-fallback attributes for a Gelpaz media URL.
+ */
+function image_attrs(string $url, string $sizes = '100vw'): string
+{
+    $small = image_small($url);
+    $attrs = ' sizes="' . e($sizes) . '"';
+    if ($small !== '') {
+        $attrs .= ' srcset="' . e($url) . ' 835w, ' . e($small) . ' 525w"';
+        $attrs .= ' data-fallback="' . e($small) . '"';
+    }
+    return $attrs;
+}
+
+/**
+ * <img> tag for Gelpaz media with width/height (avoids layout shift),
+ * lazy loading and responsive candidates.
+ */
+function render_image(string $url, string $alt, string $sizes = '100vw', string $class = '', bool $lazy = true, int $width = 835, int $height = 467): void
+{
+    echo '<img src="' . img_url($url) . '" alt="' . e($alt) . '"'
+        . ($class !== '' ? ' class="' . e($class) . '"' : '')
+        . ' width="' . $width . '" height="' . $height . '"'
+        . image_attrs($url, $sizes)
+        . ' loading="' . ($lazy ? 'lazy' : 'eager') . '" decoding="async">';
+}
+
+/**
+ * OpenStreetMap embed (no API key required) centred on the agency.
+ */
+function map_embed_url(string $label = 'GELPAZ IMMO', float $lat = 12.3686, float $lon = -1.5275, float $span = 0.012): string
+{
+    $bbox = implode('%2C', [$lon - $span, $lat - $span / 2, $lon + $span, $lat + $span / 2]);
+    return 'https://www.openstreetmap.org/export/embed.html?bbox=' . $bbox . '&layer=mapnik&marker=' . $lat . '%2C' . $lon;
+}
+
+function map_link_url(float $lat = 12.3686, float $lon = -1.5275): string
+{
+    return 'https://www.openstreetmap.org/?mlat=' . $lat . '&mlon=' . $lon . '#map=16/' . $lat . '/' . $lon;
+}
+
+function post_by_slug(string $slug): ?array
+{
+    foreach ($GLOBALS['posts'] as $post) {
+        if (($post['slug'] ?? '') === $slug) {
+            return $post;
+        }
+    }
+    return null;
 }
 
 function initials(string $name): string
@@ -94,6 +159,7 @@ function render_icon_sprite(): void
             <symbol id="i-pause" viewBox="0 0 24 24"><path d="M9 5v14"/><path d="M15 5v14"/></symbol>
             <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></symbol>
             <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21.2l7.8-7.8 1.1-1.1a5.5 5.5 0 0 0-.1-7.7z"/></symbol>
+            <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12"/><path d="M18 6 6 18"/></symbol>
             <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></symbol>
         </defs>
     </svg>
@@ -124,6 +190,7 @@ function page_title(string $page): string
         'team' => 'Notre équipe',
         'faq' => 'Questions fréquentes',
         'pricing' => 'Nos offres',
+        'legal' => 'Mentions légales & confidentialité',
         '404' => 'Page introuvable',
     ];
     return $titles[$page] ?? 'GELPAZ IMMO';
@@ -135,7 +202,7 @@ function render_property_card(array $property, bool $featured = false): void
     ?>
     <article class="<?= $class ?>">
         <a class="property-card__media" href="<?= page_url('property', ['id' => $property['id']]) ?>">
-            <img src="<?= img_url($property['image']) ?>" alt="<?= e($property['title']) ?>" loading="lazy">
+            <?php render_image($property['image'], $property['title'], '(max-width: 760px) 92vw, (max-width: 1100px) 45vw, 360px'); ?>
             <span class="property-card__tag"><?= e($property['category']) ?></span>
             <span class="property-card__arrow" aria-hidden="true"><?= icon('arrow-up-right') ?></span>
         </a>
@@ -166,16 +233,17 @@ function render_property_card(array $property, bool $featured = false): void
 function render_blog_card(array $post, bool $compact = false): void
 {
     $class = $compact ? 'post-card post-card--compact' : 'post-card';
+    $link = page_url('post', ['slug' => $post['slug'] ?? '']);
     ?>
     <article class="<?= $class ?>">
-        <a class="post-card__media" href="<?= page_url('post') ?>">
-            <img src="<?= img_url($post['image']) ?>" alt="<?= e($post['title']) ?>" loading="lazy">
+        <a class="post-card__media" href="<?= e($link) ?>">
+            <?php render_image($post['image'], $post['title'], '(max-width: 760px) 92vw, 360px'); ?>
         </a>
         <div class="post-card__body">
-            <time><?= e($post['date']) ?></time>
-            <h3><a href="<?= page_url('post') ?>"><?= e($post['title']) ?></a></h3>
+            <time datetime="<?= e($post['iso'] ?? '') ?>"><?= e($post['date']) ?></time>
+            <h3><a href="<?= e($link) ?>"><?= e($post['title']) ?></a></h3>
             <?php if (!$compact): ?><p><?= e($post['excerpt']) ?></p><?php endif; ?>
-            <?php if (!$compact): ?><a class="text-link" href="<?= page_url('post') ?>">Lire l’article <?= icon('arrow-up-right') ?></a><?php endif; ?>
+            <?php if (!$compact): ?><a class="text-link" href="<?= e($link) ?>">Lire l’article <?= icon('arrow-up-right') ?></a><?php endif; ?>
         </div>
     </article>
     <?php

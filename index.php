@@ -46,6 +46,7 @@ $og_image = 'https://gelpaz.com' . img_url($current_page === 'property' ? $selec
 <?php render_icon_sprite(); ?>
 <a class="skip-link" href="#main">Aller au contenu principal</a>
 <?php require __DIR__ . '/pages/' . $current_page . '.php'; ?>
+<?php require __DIR__ . '/pages/gallery-lightbox.php'; ?>
 <?php render_footer(); ?>
 <script src="/assets/js/app.js"></script>
 </body>
