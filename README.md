@@ -28,7 +28,10 @@ L’application utilise `index.php?page=...` afin de rester portable sur un héb
 
 ## Organisation
 
-- `index.php` : routeur et vues de pages
+- `index.php` : front controller et document shell
+- `home.php`, `about.php`, `services.php`, etc. : points d’entrée PHP dédiés par page
+- `pages/*.php` : vues PHP dédiées pour chaque page du site
+- `includes/bootstrap.php` : routage, état de page et initialisation commune
 - `includes/data.php` : contenu Gelpaz et catalogue de propriétés
 - `includes/functions.php` : helpers et composants de cartes
 - `includes/layout.php` : header, footer, heroes et CTA communs
