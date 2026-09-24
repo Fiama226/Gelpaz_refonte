@@ -3,7 +3,57 @@ DirectoryIndex index.php
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
+
+    # Internal material must never be publicly downloadable
+    RewriteRule ^docs(/|$) - [F,L]
+    RewriteRule ^tools(/|$) - [F,L]
+    RewriteRule ^includes(/|$) - [F,L]
+    RewriteRule ^screenshots\.zip$ - [F,L]
+
+    # Conventional sitemap URL
+    RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^ index.php [QSA,L]
 </IfModule>
+
+# --- Performance -----------------------------------------------------------
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml application/xml
+    AddOutputFilterByType DEFLATE application/javascript application/json image/svg+xml
+</IfModule>
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    # CSS/JS are referenced with a ?v=<filemtime> stamp (see asset_version()),
+    # so they can be cached for a year; images are immutable files.
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js|jpe?g|png|webp|svg)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    <FilesMatch "\.(php|html?)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+</IfModule>
+
+# --- Security --------------------------------------------------------------
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+# --- Privacy: hide dotfiles -------------------------------------------------
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
