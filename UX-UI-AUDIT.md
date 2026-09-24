@@ -2,6 +2,8 @@
 >
 > **P2 livré dans cette itération** : monogrammes d’équipe à la place des portraits d’emprunt, versionnage des assets (`?v=filemtime`) + cache long `immutable`, préchargement de l’image LCP, échelle d’espacement (`--space-*`) appliquée au rythme de sections, annonces d’accessibilité du diaporama limitées aux actions utilisateur.
 >
+> **Itération 4 (polish + aperçu complet)** : les cinq constats résiduels sont corrigés — plus de trou dans la grille des témoignages (première citation sur deux colonnes), piège de focus + arrière-plan `inert` + verrou de défilement dans la visionneuse, feuille `@media print`, recherche du hero compactée sous 560 px, première carte d’article mise en avant. L’aperçu statique couvre désormais **les 24 pages** (`docs/preview/`) et a fait remonter trois défauts corrigés depuis : `canonical` de tous les articles pointait vers `/article` (SEO), les pages articles partageaient un `<title>`/`description` génériques (ils viennent maintenant de l’article), et le modificateur `property-card--featured` ne servait à rien (code mort supprimé).
+>
 > **Reste à faire** (dépend du client ou d’un poste connecté) : vrais portraits/noms de l’équipe, logos de partenaires authentiques, auto-hébergement + WebP/AVIF via `tools/fetch-media.sh`, minification/versionnage automatisé en build, contrôle Lighthouse sur navigateur réel. Aperçu statique : `docs/preview/ui-preview.html`.
 
 **Scope:** Full review of the PHP refonte (`index.php`, `pages/*`, `includes/*`, `assets/css/style.css`, `assets/js/app.js`) against the visual reference kit in `screenshots.zip` (Nistora real-estate template) and current UX/UI best practice (WCAG 2.2, Core Web Vitals, real-estate conversion patterns).

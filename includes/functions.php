@@ -190,6 +190,10 @@ function property_by_id(string $id): ?array
 
 function page_title(string $page): string
 {
+    $post_title = $GLOBALS['selected_post']['title'] ?? '';
+    if ($page === 'post' && $post_title !== '') {
+        return $post_title;                     // chaque article porte son propre titre
+    }
     $titles = [
         'home' => 'Vente & location de logements à Ouagadougou',
         'about' => 'Qui sommes-nous ?',
@@ -208,11 +212,10 @@ function page_title(string $page): string
     return $titles[$page] ?? 'GELPAZ IMMO';
 }
 
-function render_property_card(array $property, bool $featured = false): void
+function render_property_card(array $property): void
 {
-    $class = $featured ? 'property-card property-card--featured' : 'property-card';
     ?>
-    <article class="<?= $class ?>">
+    <article class="property-card">
         <a class="property-card__media" href="<?= page_url('property', ['id' => $property['id']]) ?>">
             <?php render_image($property['image'], $property['title'], '(max-width: 760px) 92vw, (max-width: 1100px) 45vw, 360px'); ?>
             <span class="property-card__tag"><?= e($property['category']) ?></span>
@@ -242,9 +245,15 @@ function render_property_card(array $property, bool $featured = false): void
     <?php
 }
 
-function render_blog_card(array $post, bool $compact = false): void
+function render_blog_card(array $post, bool $compact = false, bool $featured = false): void
 {
-    $class = $compact ? 'post-card post-card--compact' : 'post-card';
+    $class = 'post-card';
+    if ($compact) {
+        $class .= ' post-card--compact';
+    }
+    if ($featured) {
+        $class .= ' post-card--featured';
+    }
     $link = page_url('post', ['slug' => $post['slug'] ?? '']);
     ?>
     <article class="<?= $class ?>">

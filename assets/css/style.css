@@ -229,3 +229,74 @@
 .team-card__monogram{display:grid;place-items:center;background:linear-gradient(140deg,var(--blue) 0%,#0a5aa5 55%,#0b3f74 100%);color:#fff}
 .team-card__monogram span{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:58px;font-weight:500;letter-spacing:.02em}
 .team-card__photo{filter:saturate(.95)}
+
+/* ==========================================================================
+   v4 — Rythme éditorial, recherche mobile compacte, impression
+   ========================================================================== */
+
+/* Body scroll lock while the lightbox is open */
+body.lightbox-open{overflow:hidden}
+
+/* Témoignages : la première citation occupe les deux colonnes (plus de trou) */
+.testimonial-list>:first-child{grid-column:1/-1}
+.testimonial-list>:first-child p{font-size:16px}
+.testimonial-list>:first-child .quote-mark{font-size:52px}
+
+/* Article à la une : première carte sur toute la largeur */
+.post-card--featured{grid-column:1/-1;display:grid;grid-template-columns:1.1fr 1fr;align-items:stretch}
+.post-card--featured .post-card__media{height:100%}
+.post-card--featured .post-card__media img{height:100%;min-height:340px}
+.post-card--featured .post-card__body{padding:38px 40px;display:flex;flex-direction:column;justify-content:center}
+.post-card--featured h3{font-size:27px;line-height:1.15;margin:10px 0 14px}
+.post-card--featured p{font-size:15px}
+.post-card--featured .text-link{margin-top:14px}
+
+@media (max-width:900px){
+  .post-card--featured{grid-template-columns:1fr}
+  .post-card--featured .post-card__media img{min-height:260px;height:260px}
+  .post-card--featured .post-card__body{padding:24px 22px}
+}
+
+/* Recherche du hero : compactée sur petits écrans (2 colonnes de filtres) */
+@media (max-width:560px){
+  .property-search{grid-template-columns:1fr 1fr;gap:9px;padding:13px}
+  .property-search__intro,.property-search label:first-of-type,.property-search .button{grid-column:1/-1}
+  .property-search label{font-size:11px;letter-spacing:.06em}
+  .property-search select{min-height:44px;padding:0 8px;font-size:15px}
+}
+
+/* ---- Impression : fiches logement et pages lisibles sur papier ---- */
+@media print{
+  @page{margin:14mm}
+  body{background:#fff!important;color:#000!important;font-size:11.5pt;line-height:1.45}
+  .site-header,.site-footer,.whatsapp-float,.back-to-top,.lightbox,.skip-link,
+  .hero-slideshow,.hero-controls,.hero-dots,.scroll-cue,.home-hero__shade,
+  .property-search,.filter-bar,.sort-form,.search-summary,.map-embed,
+  .post-share,.blog-sidebar,.sidebar-card--cta,.hero-controls,.page-hero:before,
+  .post-hero:before,.cta-band__overlay,.property-gallery__thumbs,.back-to-top{display:none!important}
+  .container{width:100%!important;max-width:none!important;margin:0!important}
+  .section{padding:0 0 14pt!important}
+  .section--dark,.section--soft,.home-hero,.page-hero,.post-hero,.cta-band,.cta-band__inner{
+    background:#fff!important;color:#000!important;min-height:0!important;padding:0 0 10pt!important}
+  .home-hero,.page-hero,.post-hero{display:block!important}
+  h1{font-size:22pt}
+  h2{font-size:16pt}
+  h3{font-size:12.5pt}
+  h1,h2,h3,em,.lead,.eyebrow{color:#000!important}
+  .eyebrow{margin-bottom:4pt}
+  .lead,.section-heading__copy,.property-card__description,.property-copy p{color:#222!important}
+  .property-summary{border:1px solid #bbb!important;border-radius:6pt;padding:10pt!important;position:static!important;break-inside:avoid}
+  .property-card,.team-card,.price-card,.faq-item,.post-card,.sidebar-card{
+    border:1px solid #ccc!important;border-radius:6pt;box-shadow:none!important;break-inside:avoid;margin-bottom:10pt}
+  .property-grid,.service-cards,.team-grid,.pricing-grid,.blog-grid,.split-section,.testimonial-layout,
+  .property-detail__layout,.contact-layout,.legal-layout{display:block!important}
+  .testimonial,.team-card__monogram{border:1px solid #ccc!important}
+  .property-gallery{display:block!important}
+  .property-gallery__main{height:auto!important;max-height:90mm;object-fit:contain!important}
+  .property-card__media img,.post-card__media img,.team-card img{height:auto!important;max-height:70mm;object-fit:contain!important}
+  img{max-width:100%!important}
+  a{color:#000!important;text-decoration:none}
+  .button{border:1px solid #333!important;background:#fff!important;color:#000!important}
+  .faq-item__answer{background:#fff!important;color:#000!important}
+  .team-card__monogram{background:#eee!important;color:#333!important;height:60mm!important}
+}

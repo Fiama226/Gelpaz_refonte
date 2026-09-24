@@ -109,6 +109,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && $current_page === 'contact'
 
 function meta_description(string $page): string
 {
+    $post_excerpt = $GLOBALS['selected_post']['excerpt'] ?? '';
+    if ($page === 'post' && $post_excerpt !== '') {
+        return $post_excerpt;                   // résumé réel de l’article (SEO + partages)
+    }
     $descriptions = [
         'home' => 'GELPAZ IMMO, votre partenaire immobilier au Burkina Faso. Découvrez nos villas, nos offres et notre accompagnement personnalisé.',
         'about' => 'Découvrez GELPAZ IMMO, son histoire, ses valeurs et sa vision pour un habitat de qualité au Burkina Faso.',

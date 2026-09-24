@@ -172,10 +172,17 @@
     const caption = lightbox.querySelector('[data-lightbox-caption]');
     const previous = lightbox.querySelector('[data-lightbox-previous]');
     const next = lightbox.querySelector('[data-lightbox-next]');
+    const background = [...document.body.children].filter((element) => element !== lightbox);
+    const setBackgroundInert = (state) => {
+      background.forEach((element) => {
+        if ('inert' in element) element.inert = state;
+      });
+    };
     const close = () => {
       lightbox.classList.remove('is-open');
       lightbox.hidden = true;
-      document.body.classList.remove('is-menu-open');
+      document.body.classList.remove('lightbox-open');
+      setBackgroundInert(false);
       lastTrigger?.focus();
     };
     let current = 0;
@@ -198,7 +205,8 @@
         show(index);
         lightbox.hidden = false;
         requestAnimationFrame(() => lightbox.classList.add('is-open'));
-        document.body.classList.add('is-menu-open');
+        document.body.classList.add('lightbox-open');
+        setBackgroundInert(true);
         lightbox.querySelector('[data-lightbox-close]')?.focus();
       });
     });
@@ -214,6 +222,20 @@
       if (event.key === 'Escape') close();
       if (event.key === 'ArrowLeft') show(current - 1);
       if (event.key === 'ArrowRight') show(current + 1);
+      if (event.key === 'Tab') {
+        // keep focus inside the dialog
+        const focusables = [...lightbox.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])')];
+        if (!focusables.length) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
     });
   }
 })();

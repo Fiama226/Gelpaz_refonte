@@ -55,6 +55,14 @@ python3 -m http.server 8000 --bind 0.0.0.0
 
 Régénérer après une modification du header/footer : `python3 screenshots_review/make_preview.py` (script d’outillage hors dépôt de production).
 
+`docs/preview/` contient en plus **l’intégralité du site en statique** (24 pages : accueil, logements + filtre location, 6 fiches, actualités, 6 articles, à propos, activités, équipe, tarifs, FAQ, contact, mentions légales, 404), rendues depuis les gabarits PHP réels et reliées entre elles par une barre de navigation d’aperçu :
+
+```bash
+python3 tools/static-snapshot.py      # regénère docs/preview/*.html
+```
+
+Le script s’arrête net (`SnapshotError`) sur toute construction PHP qu’il ne sait pas interpréter : aucune page ne peut être publiée tronquée à son insu. Ouvrir `docs/preview/index.html` pour la revue complète ; détails dans `docs/preview/README.md`.
+
 ## Audit UX/UI
 
 `UX-UI-AUDIT.md` documente l’audit complet (42 constats, priorités P0/P1/P2) et l’état d’avancement.
@@ -84,6 +92,12 @@ Régénérer après une modification du header/footer : `python3 screenshots_rev
 - **Performance** : `asset_version()` ajoute `?v=<filemtime>` à `style.css` et `app.js`, servis avec un cache d’un an (`immutable`) ; préchargement (`preload` + `imagesrcset`) de l’image du premier slide en page d’accueil.
 - **Design system** : échelle d’espacement `--space-1 … --space-9` appliquée au rythme de sections et aux principaux espacements.
 - **Accessibilité** : la région `aria-live` du diaporama ne s’exprime plus à chaque rotation ; l’annonce (« Image 2 sur 3 ») n’a lieu que sur action de l’utilisateur.
+
+### Itération 4 (polish + aperçu de revue)
+
+- **Finitions** : grille des témoignages sans cellule vide, visionneuse avec piège de focus + arrière-plan `inert` + verrou de défilement, feuille d’impression (`@media print`), recherche du hero compactée sous 560 px, première carte d’article mise en avant.
+- **Défauts trouvés grâce à l’aperçu statique** : `canonical` des articles qui pointaient tous vers `/article`, `<title>`/`description` génériques sur les six articles (désormais tirés de l’article), modificateur `property-card--featured` inutile.
+- **Revue** : les **24 pages** sont générées en statique dans `docs/preview/` avec une barre de navigation d’aperçu, pour relire toute la refonte avant fusion.
 
 ### Reste à faire (P3 / dépend du client)
 

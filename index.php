@@ -1,6 +1,12 @@
 <?php
 require __DIR__ . '/includes/bootstrap.php';
-$canonical = 'https://gelpaz.com' . page_url($current_page, $current_page === 'property' ? ['id' => $selected_property['id']] : []);
+$route_params = [];
+if ($current_page === 'property') {
+    $route_params = ['id' => $selected_property['id']];
+} elseif ($current_page === 'post') {
+    $route_params = ['slug' => $selected_post['slug'] ?? ''];
+}
+$canonical = 'https://gelpaz.com' . page_url($current_page, $route_params);
 $og_image = 'https://gelpaz.com' . img_url($current_page === 'property' ? $selected_property['image'] : $images['hero']);
 ?><!doctype html>
 <html lang="fr">
