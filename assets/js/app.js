@@ -48,6 +48,13 @@
     });
   }
 
+  const header = document.querySelector('.site-header');
+  if (header) {
+    const toggleHeader = () => header.classList.toggle('is-scrolled', window.scrollY > 90);
+    window.addEventListener('scroll', toggleHeader, { passive: true });
+    toggleHeader();
+  }
+
   const topButton = document.querySelector('.back-to-top');
   if (topButton) {
     window.addEventListener('scroll', () => {
@@ -69,7 +76,9 @@
     let timer;
     let paused = reducedMotion.matches;
 
-    const updateSlide = (index) => {
+    const status = hero.querySelector('[data-slide-status]');
+
+    const updateSlide = (index, announce = false) => {
       activeIndex = (index + slides.length) % slides.length;
       slides.forEach((slide, slideIndex) => {
         slide.classList.toggle('is-active', slideIndex === activeIndex);
@@ -77,6 +86,10 @@
       dots.forEach((dot, dotIndex) => {
         dot.setAttribute('aria-current', String(dotIndex === activeIndex));
       });
+      // only user-initiated changes are announced: auto-rotation stays silent
+      if (announce && status) {
+        status.textContent = `Image ${activeIndex + 1} sur ${slides.length}`;
+      }
     };
 
     const stopTimer = () => {
@@ -91,17 +104,25 @@
       }
     };
 
+    const setPausedIcon = (isPaused) => {
+      const use = pauseButton?.querySelector('use');
+      if (!use) return;
+      const icon = isPaused ? '#i-play' : '#i-pause';
+      use.setAttribute('href', icon);
+      use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', icon);
+    };
+
     const setPaused = (value) => {
       paused = value;
-      pauseButton.textContent = paused ? '▶' : 'Ⅱ';
+      setPausedIcon(paused);
       pauseButton.setAttribute('aria-label', paused ? 'Lire le diaporama' : 'Mettre le diaporama en pause');
       startTimer();
     };
 
-    previousButton?.addEventListener('click', () => updateSlide(activeIndex - 1));
-    nextButton?.addEventListener('click', () => updateSlide(activeIndex + 1));
+    previousButton?.addEventListener('click', () => updateSlide(activeIndex - 1, true));
+    nextButton?.addEventListener('click', () => updateSlide(activeIndex + 1, true));
     pauseButton?.addEventListener('click', () => setPaused(!paused));
-    dots.forEach((dot) => dot.addEventListener('click', () => updateSlide(Number(dot.dataset.slideTo))));
+    dots.forEach((dot) => dot.addEventListener('click', () => updateSlide(Number(dot.dataset.slideTo), true)));
     hero.addEventListener('mouseenter', stopTimer);
     hero.addEventListener('mouseleave', startTimer);
     hero.addEventListener('focusin', stopTimer);
@@ -116,4 +137,105 @@
     startTimer();
   }
 
+
+  /* Gelpaz media is hotlinked: if a larger variant is missing on the source
+     server, fall back to the smaller one instead of showing a broken image. */
+  const applyFallback = (image) => {
+    const fallback = image.dataset.fallback;
+    if (!fallback || image.dataset.fallbackUsed) return;
+    image.dataset.fallbackUsed = 'true';
+    image.removeAttribute('srcset');
+    image.src = fallback;
+  };
+  document.querySelectorAll('img[data-fallback]').forEach((image) => {
+    image.addEventListener('error', () => applyFallback(image));
+    // the error may already have fired while the page was parsing
+    if (image.complete && image.naturalWidth === 0) applyFallback(image);
+  });
+
+  /* Property gallery lightbox */
+  const lightbox = document.querySelector('.lightbox');
+  const gallery = document.querySelector('[data-gallery]');
+  if (lightbox && gallery) {
+    const allTriggers = [...gallery.querySelectorAll('[data-lightbox-open]')];
+    const thumbs = allTriggers.filter((trigger) => trigger.dataset.photo);
+    const triggers = thumbs.length ? thumbs : allTriggers;
+    const images = triggers.map((trigger) => trigger.dataset.photo
+      || trigger.querySelector('img')?.getAttribute('src'));
+    const alts = triggers.map((trigger) => trigger.querySelector('img')?.alt || '');
+    // the main photo mirrors the first thumbnail: point its trigger at that slide
+    const mainTrigger = allTriggers.find((trigger) => !trigger.dataset.photo);
+    const mainIndex = mainTrigger
+      ? Math.max(0, images.indexOf(mainTrigger.querySelector('img')?.getAttribute('src')))
+      : -1;
+    const stage = lightbox.querySelector('[data-lightbox-image]');
+    const caption = lightbox.querySelector('[data-lightbox-caption]');
+    const previous = lightbox.querySelector('[data-lightbox-previous]');
+    const next = lightbox.querySelector('[data-lightbox-next]');
+    const background = [...document.body.children].filter((element) => element !== lightbox);
+    const setBackgroundInert = (state) => {
+      background.forEach((element) => {
+        if ('inert' in element) element.inert = state;
+      });
+    };
+    const close = () => {
+      lightbox.classList.remove('is-open');
+      lightbox.hidden = true;
+      document.body.classList.remove('lightbox-open');
+      setBackgroundInert(false);
+      lastTrigger?.focus();
+    };
+    let current = 0;
+    let lastTrigger = null;
+
+    const show = (index) => {
+      current = (index + images.length) % images.length;
+      stage.src = images[current];
+      stage.alt = alts[current] || '';
+      caption.textContent = `${current + 1} / ${images.length}`;
+      gallery.querySelectorAll('.property-gallery__thumbs button').forEach((button, buttonIndex) => {
+        button.setAttribute('aria-current', String(buttonIndex === current));
+      });
+    };
+
+    allTriggers.forEach((trigger) => {
+      const index = trigger === mainTrigger ? mainIndex : triggers.indexOf(trigger);
+      trigger.addEventListener('click', () => {
+        lastTrigger = trigger;
+        show(index);
+        lightbox.hidden = false;
+        requestAnimationFrame(() => lightbox.classList.add('is-open'));
+        document.body.classList.add('lightbox-open');
+        setBackgroundInert(true);
+        lightbox.querySelector('[data-lightbox-close]')?.focus();
+      });
+    });
+
+    previous?.addEventListener('click', () => show(current - 1));
+    next?.addEventListener('click', () => show(current + 1));
+    lightbox.querySelector('[data-lightbox-close]')?.addEventListener('click', close);
+    lightbox.addEventListener('click', (event) => {
+      if (event.target === lightbox) close();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (lightbox.hidden) return;
+      if (event.key === 'Escape') close();
+      if (event.key === 'ArrowLeft') show(current - 1);
+      if (event.key === 'ArrowRight') show(current + 1);
+      if (event.key === 'Tab') {
+        // keep focus inside the dialog
+        const focusables = [...lightbox.querySelectorAll('button, [href], [tabindex]:not([tabindex="-1"])')];
+        if (!focusables.length) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    });
+  }
 })();

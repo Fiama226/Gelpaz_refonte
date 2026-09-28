@@ -15,7 +15,10 @@ $route_map = [
     'souscription-logement' => 'pricing',
     'nos-activites' => 'services',
     'blog-list-no-sidebar-2' => 'blog',
+    'article' => 'post',
     'contact-us' => 'contact',
+    'mentions-legales' => 'legal',
+    'politique-de-confidentialite' => 'legal',
     'nos-realisations' => 'properties',
     'team' => 'team',
     'faq' => 'faq',
@@ -26,12 +29,28 @@ if (str_starts_with($path, 'estate_property/')) {
     $route_page = 'property';
     $_GET['id'] = basename($path);
 }
+if (str_starts_with($path, 'article/')) {
+    $route_page = 'post';
+    $_GET['slug'] = basename($path);
+}
 if ($route_page === 'properties' && $path === 'property_action_category/vente') {
     $_GET['filter'] = 'vente';
 }
-$page = $_GET['page'] ?? $route_page ?? 'home';
-$allowed_pages = ['home', 'about', 'services', 'properties', 'property', 'blog', 'post', 'contact', 'team', 'faq', 'pricing'];
-$current_page = in_array($page, $allowed_pages, true) ? $page : 'home';
+$allowed_pages = ['home', 'about', 'services', 'properties', 'property', 'blog', 'post', 'contact', 'team', 'faq', 'pricing', 'legal'];
+$requested_page = (string) ($_GET['page'] ?? $route_page ?? 'home');
+$is_404 = !in_array($requested_page, $allowed_pages, true);
+if ($is_404) {
+    http_response_code(404);
+}
+
+$post_slug = trim((string) ($_GET['slug'] ?? ''));
+$selected_post = $post_slug !== '' ? post_by_slug($post_slug) : $posts[0];
+if ($post_slug !== '' && $selected_post === null) {
+    $is_404 = true;
+    http_response_code(404);
+    $current_page = '404';
+}
+$current_page = $is_404 ? '404' : $requested_page;
 $GLOBALS['current_page'] = $current_page;
 
 $property_id = $_GET['id'] ?? 'modele-f4c';
@@ -61,10 +80,39 @@ if ($visible_properties === [] && !$has_property_search) {
 if ($property_sort === 'area') {
     usort($visible_properties, static fn (array $a, array $b): int => (int) preg_replace('/\D+/', '', (string) ($a['area'] ?? '0')) <=> (int) preg_replace('/\D+/', '', (string) ($b['area'] ?? '0')));
 }
-$contact_success = false; // No mail delivery integration is configured; never report an unconfirmed submission as received.
+$contact_state = null;
+$contact_values = ['first_name' => '', 'last_name' => '', 'email' => '', 'phone' => '', 'message' => ''];
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && $current_page === 'contact') {
+    foreach ($contact_values as $field => $default) {
+        $contact_values[$field] = trim((string) ($_POST[$field] ?? ''));
+    }
+    $consent = ($_POST['consent'] ?? '') === 'yes';
+    $honeypot = trim((string) ($_POST['website'] ?? ''));
+    if ($honeypot !== '') {
+        $contact_state = 'success'; // Bot submissions are dropped silently.
+    } elseif ($contact_values['email'] === '' || $contact_values['message'] === '' || !$consent
+        || !filter_var($contact_values['email'], FILTER_VALIDATE_EMAIL)) {
+        $contact_state = 'error';
+    } else {
+        $name = ($contact_values['first_name'] . ' ' . $contact_values['last_name']) ?: 'Visiteur du site';
+        $body = "Nom : {$name}\n"
+            . "E-mail : {$contact_values['email']}\n"
+            . "Téléphone : {$contact_values['phone']}\n\n"
+            . "Message :\n{$contact_values['message']}\n";
+        $headers = "From: GELPAZ IMMO <infos@gelpaz.com>\r\n"
+            . 'Reply-To: ' . $contact_values['email'] . "\r\n"
+            . "Content-Type: text/plain; charset=UTF-8\r\n";
+        $sent = @mail('infos@gelpaz.com', 'Nouveau message du site GELPAZ IMMO — ' . $name, $body, $headers);
+        $contact_state = $sent ? 'success' : 'error';
+    }
+}
 
 function meta_description(string $page): string
 {
+    $post_excerpt = $GLOBALS['selected_post']['excerpt'] ?? '';
+    if ($page === 'post' && $post_excerpt !== '') {
+        return $post_excerpt;                   // résumé réel de l’article (SEO + partages)
+    }
     $descriptions = [
         'home' => 'GELPAZ IMMO, votre partenaire immobilier au Burkina Faso. Découvrez nos villas, nos offres et notre accompagnement personnalisé.',
         'about' => 'Découvrez GELPAZ IMMO, son histoire, ses valeurs et sa vision pour un habitat de qualité au Burkina Faso.',
@@ -74,6 +122,11 @@ function meta_description(string $page): string
         'blog' => 'Les actualités et conseils immobiliers de GELPAZ IMMO.',
         'post' => 'Actualité immobilière et conseils GELPAZ IMMO.',
         'contact' => 'Contactez GELPAZ IMMO à Ouagadougou pour votre projet immobilier.',
+        'team' => 'Rencontrez l’équipe GELPAZ IMMO : des conseillers à votre écoute pour tous vos projets immobiliers au Burkina Faso.',
+        'faq' => 'Réponses aux questions fréquentes sur l’achat, la location et la souscription de logements avec GELPAZ IMMO.',
+        'pricing' => 'Découvrez les offres et les modalités de souscription logement proposées par GELPAZ IMMO.',
+        'legal' => 'Mentions légales, protection des données et politique de confidentialité du site GELPAZ IMMO.',
+        '404' => 'La page demandée est introuvable. Retrouvez nos logements et notre équipe depuis l’accueil du site GELPAZ IMMO.',
     ];
     return $descriptions[$page] ?? $descriptions['home'];
 }
